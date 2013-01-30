@@ -14,18 +14,18 @@ class SxMailTest extends PHPUnit_Framework_TestCase
      */
     public function testComposeLayoutAndViewModel()
     {
-        $view = $this->getMock('Zend\View\View', array('render'));
-        $view
+        $viewRenderer = $this->getMock('Zend\View\Renderer\RendererInterface', array('render', 'getEngine', 'setResolver'));
+        $viewRenderer
                 ->expects($this->exactly(3))
                 ->method('render')
                 ->will($this->returnValue('aapje'));
 
-        $viewManager = $this->getMock('Zend\Mvc\View\Console\ViewManager', array('getView'));
+        $viewManager = $this->getMock('Zend\Mvc\View\Console\ViewManager', array('getRenderer'));
 
         $viewManager
                 ->expects($this->once())
-                ->method('getView')
-                ->will($this->returnValue($view));
+                ->method('getRenderer')
+                ->will($this->returnValue($viewRenderer));
 
         $serviceManager = new ServiceManager(
             new ServiceManagerConfig(include __DIR__ . '/_files/services.config.php')
@@ -53,18 +53,18 @@ class SxMailTest extends PHPUnit_Framework_TestCase
     public function testSetLayoutFail()
     {
         // Expected zero times because render isn't called until the end.
-        $view = $this->getMock('Zend\View\View', array('render'));
-        $view
+        $viewRenderer =  $this->getMock('Zend\View\Renderer\RendererInterface', array('render', 'getEngine', 'setResolver'));
+        $viewRenderer
                 ->expects($this->exactly(0))
                 ->method('render')
                 ->will($this->returnValue('aapje'));
 
-        $viewManager = $this->getMock('Zend\Mvc\View\Console\ViewManager', array('getView'));
+        $viewManager = $this->getMock('Zend\Mvc\View\Console\ViewManager', array('getRenderer'));
 
         $viewManager
                 ->expects($this->once())
-                ->method('getView')
-                ->will($this->returnValue($view));
+                ->method('getRenderer')
+                ->will($this->returnValue($viewRenderer));
 
         $serviceManager = new ServiceManager(
             new ServiceManagerConfig(include __DIR__ . '/_files/services.config.php')
@@ -90,13 +90,13 @@ class SxMailTest extends PHPUnit_Framework_TestCase
      */
     public function testComposeInvalidBody()
     {
-        $view        = $this->getMock('Zend\View\View');
-        $viewManager = $this->getMock('Zend\Mvc\View\Console\ViewManager', array('getView'));
+        $viewRenderer   = $this->getMock('Zend\View\Renderer\RendererInterface', array('render', 'getEngine', 'setResolver'));
+        $viewManager    = $this->getMock('Zend\Mvc\View\Console\ViewManager', array('getRenderer'));
 
         $viewManager
                 ->expects($this->once())
-                ->method('getView')
-                ->will($this->returnValue($view));
+                ->method('getRenderer')
+                ->will($this->returnValue($viewRenderer));
 
         $serviceManager = new ServiceManager(
             new ServiceManagerConfig(include __DIR__ . '/_files/services.config.php')
@@ -116,18 +116,18 @@ class SxMailTest extends PHPUnit_Framework_TestCase
      */
     public function testComposeApplyOptions()
     {
-        $view = $this->getMock('Zend\View\View', array('render'));
-        $view
+        $viewRenderer =  $this->getMock('Zend\View\Renderer\RendererInterface', array('render', 'getEngine', 'setResolver'));
+        $viewRenderer
                 ->expects($this->exactly(2))
                 ->method('render')
                 ->will($this->returnValue('aapje'));
 
-        $viewManager = $this->getMock('Zend\Mvc\View\Console\ViewManager', array('getView'));
+        $viewManager = $this->getMock('Zend\Mvc\View\Console\ViewManager', array('getRenderer'));
 
         $viewManager
                 ->expects($this->once())
-                ->method('getView')
-                ->will($this->returnValue($view));
+                ->method('getRenderer')
+                ->will($this->returnValue($viewRenderer));
 
         $serviceManager = new ServiceManager(
             new ServiceManagerConfig(include __DIR__ . '/_files/services.config.php')
@@ -158,14 +158,14 @@ class SxMailTest extends PHPUnit_Framework_TestCase
             );
         }
 
-        $view = $this->getMock('Zend\View\View');
+        $viewRenderer =  $this->getMock('Zend\View\Renderer\RendererInterface', array('render', 'getEngine', 'setResolver'));
 
-        $viewManager = $this->getMock('Zend\Mvc\View\Console\ViewManager', array('getView'));
+        $viewManager = $this->getMock('Zend\Mvc\View\Console\ViewManager', array('getRenderer'));
 
         $viewManager
                 ->expects($this->once())
-                ->method('getView')
-                ->will($this->returnValue($view));
+                ->method('getRenderer')
+                ->will($this->returnValue($viewRenderer));
 
         $serviceManager = new ServiceManager(
             new ServiceManagerConfig(include __DIR__ . '/_files/services.config.php')
@@ -196,14 +196,13 @@ class SxMailTest extends PHPUnit_Framework_TestCase
             );
         }
 
-        $view = $this->getMock('Zend\View\View');
-
-        $viewManager = $this->getMock('Zend\Mvc\View\Console\ViewManager', array('getView'));
+        $viewRenderer   =  $this->getMock('Zend\View\Renderer\RendererInterface', array('render', 'getEngine', 'setResolver'));
+        $viewManager    = $this->getMock('Zend\Mvc\View\Console\ViewManager', array('getRenderer'));
 
         $viewManager
                 ->expects($this->once())
-                ->method('getView')
-                ->will($this->returnValue($view));
+                ->method('getRenderer')
+                ->will($this->returnValue($viewRenderer));
 
         $serviceManager = new ServiceManager(
             new ServiceManagerConfig(include __DIR__ . '/_files/services.config.php')
@@ -228,14 +227,14 @@ class SxMailTest extends PHPUnit_Framework_TestCase
      */
     public function testSendSmtpFailInvalidTransportType()
     {
-        $view = $this->getMock('Zend\View\View');
+        $viewRenderer =  $this->getMock('Zend\View\Renderer\RendererInterface', array('render', 'getEngine', 'setResolver'));
 
-        $viewManager = $this->getMock('Zend\Mvc\View\Console\ViewManager', array('getView'));
+        $viewManager = $this->getMock('Zend\Mvc\View\Console\ViewManager', array('getRenderer'));
 
         $viewManager
                 ->expects($this->once())
-                ->method('getView')
-                ->will($this->returnValue($view));
+                ->method('getRenderer')
+                ->will($this->returnValue($viewRenderer));
 
         $serviceManager = new ServiceManager(
             new ServiceManagerConfig(include __DIR__ . '/_files/services.config.php')
