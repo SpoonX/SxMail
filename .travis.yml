@@ -12,7 +12,7 @@ before_script:
   - curl -s http://getcomposer.org/installer | php
   - php composer.phar install --dev
   - rm -rf vendor/rwoverdijk/sxmail
-  - cp -r ../AssetManager vendor/rwoverdijk/sxmail
+  - cp -r ../SxMail vendor/rwoverdijk/sxmail
   - cd vendor/rwoverdijk/sxmail
   - wget http://cs.sensiolabs.org/get/php-cs-fixer.phar
 
