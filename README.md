@@ -1,5 +1,6 @@
 SxMail 1.0 RC1
 =======================
+[![Build Status](https://secure.travis-ci.org/RWOverdijk/SxMail.png?branch=master)](http://travis-ci.org/RWOverdijk/SxMail)
 
 Introduction
 ------------
@@ -23,7 +24,7 @@ The wiki can be found [here](https://github.com/RWOverdijk/SxMail/wiki).
 Questions / support
 ------------
 If you're having trouble with this module there are a couple of resources that might be of help.
-* [The wikie](https://github.com/RWOverdijk/SxMail/wiki).
+* [The wiki](https://github.com/RWOverdijk/SxMail/wiki).
 * [RWOverdijk at irc.freenode.net #zftalk.dev](http://webchat.freenode.net?channels=zftalk.dev%2Czftalk&uio=MTE9MTAz8d).
 * [Issue tracker](https://github.com/RWOverdijk/SxMail/issues). (Please try to not submit unrelated issues).
 * By [mail](mailto:r.w.overdijk@gmail.com?Subject=SxMail%20help)
