@@ -114,6 +114,13 @@ class SxMailTest extends PHPUnit_Framework_TestCase
      */
     public function testSend()
     {
+        if (getenv('TRAVIS')) {
+            $this->setExpectedException(
+                'Zend\Mail\Exception\RuntimeException',
+                'Unable to send mail: Unknown error'
+            );
+        }
+
         $view = $this->getMock('Zend\View\View');
 
         $viewManager = $this->getMock('Zend\Mvc\View\Console\ViewManager', array('getView'));
@@ -145,6 +152,13 @@ class SxMailTest extends PHPUnit_Framework_TestCase
      */
     public function testSendSmtp()
     {
+        if (getenv('TRAVIS')) {
+            $this->setExpectedException(
+                'Zend\Mail\Protocol\Exception\RuntimeException',
+                'Network is unreachable'
+            );
+        }
+
         $view = $this->getMock('Zend\View\View');
 
         $viewManager = $this->getMock('Zend\Mvc\View\Console\ViewManager', array('getView'));
