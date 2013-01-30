@@ -3,6 +3,8 @@
 namespace SxMail;
 
 use Zend\Mail\Message;
+use Zend\Mime\Message as MimeMessage;
+use Zend\Mime\Part as MimePart;
 use Zend\View\Model\ViewModel;
 use Zend\View\Renderer\RendererInterface;
 use SxMail\Exception\InvalidArgumentException;
@@ -91,16 +93,19 @@ class SxMail
      * Manipulate the body based on configuration options.
      *
      * @param   mixed   $body
+     * @param   string  $mimeType
      *
      * @return  string
      */
-    protected function manipulateBody($body)
+    protected function manipulateBody($body, $mimeType = null)
     {
         // Make sure we have a string.
         if ($body instanceof ViewModel) {
-            $body = $this->viewRenderer->render($body);
+            $body               = $this->viewRenderer->render($body);
+            $detectedMimeType   = 'text/html';
         } elseif (null === $body) {
-            $body = '';
+            $detectedMimeType   = 'text/plain';
+            $body               = '';
         }
 
         if (null !== ($layout = $this->getLayout())) {
@@ -108,10 +113,24 @@ class SxMail
                 'content' => $body,
             ));
 
-            $body = $this->viewRenderer->render($layout);
+            $detectedMimeType   = 'text/html';
+            $body               = $this->viewRenderer->render($layout);
         }
 
-        return $body;
+
+        if (null === $mimeType && !isset($detectedMimeType)) {
+            $mimeType = preg_match("/<[^<]+>/", $body) ? 'text/html' : 'text/plain';
+        } elseif (null === $mimeType) {
+            $mimeType = $detectedMimeType;
+        }
+
+        $mimePart       = new MimePart($body);
+        $mimePart->type = $mimeType;
+        $message        = new MimeMessage();
+
+        $message->addPart($mimePart);
+
+        return $message;
     }
 
     /**
@@ -157,11 +176,12 @@ class SxMail
      * Compose a new message.
      *
      * @param   mixed   $body   Accepts instance of ViewModel, string and null.
+     * @param   string  $mimeType
      *
      * @return  \Zend\Mail\Message
      * @throws  \SxMail\Exception\InvalidArgumentException
      */
-    public function compose($body = null)
+    public function compose($body = null, $mimeType = null)
     {
         // Supported types are null, ViewModel and string.
         if (null !== $body && !is_string($body) && !($body instanceof ViewModel)) {
@@ -170,7 +190,7 @@ class SxMail
             );
         }
 
-        $body    = $this->manipulateBody($body);
+        $body    = $this->manipulateBody($body, $mimeType);
         $message = new Message;
 
         $message->setBody($body);
