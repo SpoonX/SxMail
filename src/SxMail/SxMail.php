@@ -4,7 +4,7 @@ namespace SxMail;
 
 use Zend\Mail\Message;
 use Zend\View\Model\ViewModel;
-use Zend\View\View;
+use Zend\View\Renderer\RendererInterface;
 use SxMail\Exception\InvalidArgumentException;
 use SxMail\Exception\RuntimeException;
 
@@ -17,24 +17,25 @@ class SxMail
 
     /**
      *
-     * @var Zend\View\View
+     * @var \Zend\View\Renderer\RendererInterface
      */
-    protected $view;
+    protected $viewRenderer;
 
     /**
-     * @var Zend\View\Model\ViewModel
+     * @var \Zend\View\Model\ViewModel
      */
     protected $layout;
 
     /**
      * Construct SxMail.
      *
-     * @param   array   $config
+     * @param   Zend\View\Renderer\RendererInterface    $viewRenderer
+     * @param   array                                   $config
      */
-    public function __construct(View $view, $config)
+        public function __construct(RendererInterface $viewRenderer, $config)
     {
-        $this->view   = $view;
-        $this->config = $config;
+        $this->viewRenderer = $viewRenderer;
+        $this->config       = $config;
 
         $this->setLayout();
     }
@@ -44,7 +45,7 @@ class SxMail
      *
      * @param   mixed   $layout Either null (looks in config), ViewModel, or string.
      *
-     * @throws InvalidArgumentException
+     * @throws  \SxMail\Exception\InvalidArgumentException
      */
     public function setLayout($layout = null)
     {
@@ -97,7 +98,7 @@ class SxMail
     {
         // Make sure we have a string.
         if ($body instanceof ViewModel) {
-            $body = $this->view->render($body);
+            $body = $this->viewRenderer->render($body);
         } elseif (null === $body) {
             $body = '';
         }
@@ -107,7 +108,7 @@ class SxMail
                 'content' => $body,
             ));
 
-            $body = $this->view->render($layout);
+            $body = $this->viewRenderer->render($layout);
         }
 
         return $body;
@@ -141,7 +142,7 @@ class SxMail
      * @param   mixed   $body   Accepts instance of ViewModel, string and null.
      *
      * @return  \Zend\Mail\Message
-     * @throws  InvalidArgumentException
+     * @throws  \SxMail\Exception\InvalidArgumentException
      */
     public function compose($body = null)
     {
