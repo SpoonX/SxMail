@@ -42,12 +42,12 @@ class SxMailTest extends PHPUnit_Framework_TestCase
         $data       = $sxMail->compose($viewModel);
         $dataNull   = $sxMail->compose(null);
         $this->assertInstanceOf('Zend\Mail\Message', $data);
-        $this->assertEquals('aapje', $data->getBody()); // 1x aapje because layout doesn't load view in this test.
-        $this->assertEquals('aapje', $dataNull->getBody()); // Aapje because this time there's no layout. (was unset in prev test)
+        $this->assertEquals('aapje', $data->getBody()->getPartContent(0)); // 1x aapje because layout doesn't load view in this test.
+        $this->assertEquals('aapje', $dataNull->getBody()->getPartContent(0)); // Aapje because this time there's no layout. (was unset in prev test)
     }
 
     /**
-     * Test if composing in the most default way works.
+     * Test if setting headers works.
      */
     public function testSetHeaders()
     {
@@ -71,15 +71,58 @@ class SxMailTest extends PHPUnit_Framework_TestCase
         $serviceManager->setService('view_manager', $viewManager);
         $serviceManager->setService('Config', include __DIR__ . '/_files/module.config.php');
 
-        $viewModel  = new ViewModel;
-        $viewModel->setTemplate('mock.phtml');
-
         $mail       = $serviceManager->get('SxMail\Service\SxMail');
         $sxMail     = $mail->prepare('testSetHeaders');
         $data       = $sxMail->compose('Random');
         $headers    = $data->getHeaders();
 
         $this->assertEquals('X-Cool-Header: cool value!', $headers->get('x-cool-header')->toString());
+    }
+
+    /**
+     * Test if detecting mime works.
+     */
+    public function testDetectMime()
+    {
+        $viewRenderer = $this->getMock('Zend\View\Renderer\RendererInterface', array('render', 'getEngine', 'setResolver'));
+        $viewRenderer
+                ->expects($this->exactly(1))
+                ->method('render')
+                ->will($this->returnValue('aapje'));
+
+        $viewManager = $this->getMock('Zend\Mvc\View\Console\ViewManager', array('getRenderer'));
+
+        $viewManager
+                ->expects($this->once())
+                ->method('getRenderer')
+                ->will($this->returnValue($viewRenderer));
+
+        $serviceManager = new ServiceManager(
+            new ServiceManagerConfig(include __DIR__ . '/_files/services.config.php')
+        );
+
+        $serviceManager->setService('view_manager', $viewManager);
+        $serviceManager->setService('Config', include __DIR__ . '/_files/module.config.php');
+
+        $viewModel  = new ViewModel;
+        $viewModel->setTemplate('mock.phtml');
+
+        $mail           = $serviceManager->get('SxMail\Service\SxMail');
+        $sxMail         = $mail->prepare();
+        $string         = $sxMail->compose('Random');
+        $htmlForced     = $sxMail->compose('Random', 'text/html');
+        $html           = $sxMail->compose('<strong>Random</strong>');
+        $htmlModel      = $sxMail->compose($viewModel);
+        $mimeString     = $string->getBody()->getPartHeadersArray(0);
+        $mimeHtmlForced = $htmlForced->getBody()->getPartHeadersArray(0);
+        $mimeHtml       = $html->getBody()->getPartHeadersArray(0);
+        $mimeModel      = $htmlModel->getBody()->getPartHeadersArray(0);
+
+        $this->assertEquals('text/plain', $mimeString[0][1]);
+        $this->assertEquals('text/html', $mimeHtmlForced[0][1]);
+        $this->assertEquals('text/html', $mimeHtml[0][1]);
+        $this->assertEquals('text/html', $mimeModel[0][1]);
+
     }
 
     /**
@@ -108,9 +151,6 @@ class SxMailTest extends PHPUnit_Framework_TestCase
 
         $serviceManager->setService('view_manager', $viewManager);
         $serviceManager->setService('Config', include __DIR__ . '/_files/module.config.php');
-
-        $viewModel  = new ViewModel;
-        $viewModel->setTemplate('mock.phtml');
 
         $mail       = $serviceManager->get('SxMail\Service\SxMail');
         $sxMail     = $mail->prepare('testWithLayout');
@@ -215,7 +255,7 @@ class SxMailTest extends PHPUnit_Framework_TestCase
         $sxMail     = $mail->prepare('testSimpleSendMail');
         $data       = $sxMail->compose($body);
 
-        $this->assertEquals($body, $data->getBody());
+        $this->assertEquals($body, $data->getBody()->getPartContent(0));
 
         $sxMail->send($data);
     }
@@ -252,7 +292,7 @@ class SxMailTest extends PHPUnit_Framework_TestCase
         $sxMail     = $mail->prepare('testSmtp');
         $data       = $sxMail->compose($body);
 
-        $this->assertEquals($body, $data->getBody());
+        $this->assertEquals($body, $data->getBody()->getPartContent(0));
 
         $sxMail->send($data);
     }
@@ -284,7 +324,7 @@ class SxMailTest extends PHPUnit_Framework_TestCase
         $sxMail     = $mail->prepare('testSmtpInvalidTransportType');
         $data       = $sxMail->compose($body);
 
-        $this->assertEquals($body, $data->getBody());
+        $this->assertEquals($body, $data->getBody()->getPartContent(0));
 
         $sxMail->send($data);
     }
