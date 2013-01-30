@@ -29,7 +29,7 @@ class SxMail
     /**
      * Construct SxMail.
      *
-     * @param   Zend\View\Renderer\RendererInterface    $viewRenderer
+     * @param   \Zend\View\Renderer\RendererInterface    $viewRenderer
      * @param   array                                   $config
      */
         public function __construct(RendererInterface $viewRenderer, $config)
