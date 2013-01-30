@@ -32,7 +32,7 @@ class SxMail
      * @param   \Zend\View\Renderer\RendererInterface   $viewRenderer
      * @param   array                                   $config
      */
-        public function __construct(RendererInterface $viewRenderer, $config)
+    public function __construct(RendererInterface $viewRenderer, $config)
     {
         $this->viewRenderer = $viewRenderer;
         $this->config       = $config;
@@ -137,6 +137,23 @@ class SxMail
     }
 
     /**
+     * @param   \Zend\Mail\Message  $message
+     */
+    public function applyMessageHeaders($message)
+    {
+        if (empty($this->config['message']['headers']) || !is_array($this->config['message']['headers'])) {
+            return $message;
+        }
+
+        $headers        = $this->config['message']['headers'];
+        $messageHeaders = $message->getHeaders();
+
+        foreach ($headers as $field => $value) {
+            $messageHeaders->addHeaderLine((string) $field, (string) $value);
+        }
+    }
+
+    /**
      * Compose a new message.
      *
      * @param   mixed   $body   Accepts instance of ViewModel, string and null.
@@ -158,6 +175,7 @@ class SxMail
 
         $message->setBody($body);
 
+        $this->applyMessageHeaders($message);
         $this->applyMessageOptions($message);
 
         return $message;
