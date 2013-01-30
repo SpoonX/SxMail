@@ -16,7 +16,7 @@ class SxMailTest extends PHPUnit_Framework_TestCase
     {
         $view = $this->getMock('Zend\View\View', array('render'));
         $view
-                ->expects($this->exactly(2))
+                ->expects($this->exactly(3))
                 ->method('render')
                 ->will($this->returnValue('aapje'));
 
@@ -43,7 +43,44 @@ class SxMailTest extends PHPUnit_Framework_TestCase
         $dataNull   = $sxMail->compose(null);
         $this->assertInstanceOf('Zend\Mail\Message', $data);
         $this->assertEquals('aapje', $data->getBody()); // 1x aapje because layout doesn't load view in this test.
-        $this->assertEquals('', $dataNull->getBody()); // Expect aapje, but was unset from config with prev test. so empty string.
+        $this->assertEquals('aapje', $dataNull->getBody()); // Aapje because this time there's no layout. (was unset in prev test)
+    }
+
+    /**
+     * Test if setLayout fails with invalid values.
+     * @expectedException SxMail\Exception\InvalidArgumentException
+     */
+    public function testSetLayoutFail()
+    {
+        // Expected zero times because render isn't called until the end.
+        $view = $this->getMock('Zend\View\View', array('render'));
+        $view
+                ->expects($this->exactly(0))
+                ->method('render')
+                ->will($this->returnValue('aapje'));
+
+        $viewManager = $this->getMock('Zend\Mvc\View\Console\ViewManager', array('getView'));
+
+        $viewManager
+                ->expects($this->once())
+                ->method('getView')
+                ->will($this->returnValue($view));
+
+        $serviceManager = new ServiceManager(
+            new ServiceManagerConfig(include __DIR__ . '/_files/services.config.php')
+        );
+
+        $serviceManager->setService('view_manager', $viewManager);
+        $serviceManager->setService('Config', include __DIR__ . '/_files/module.config.php');
+
+        $viewModel  = new ViewModel;
+        $viewModel->setTemplate('mock.phtml');
+
+        $mail       = $serviceManager->get('SxMail\Service\SxMail');
+        $sxMail     = $mail->prepare('testWithLayout');
+
+        $sxMail->setLayout(9);
+
     }
 
     /**

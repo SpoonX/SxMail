@@ -2,7 +2,6 @@
 
 namespace SxMail\Service;
 
-use SxMail\Exception\InvalidArgumentException;
 use SxMail\SxMail;
 use Zend\Config\Config;
 use Zend\View\View;

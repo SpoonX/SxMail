@@ -22,6 +22,11 @@ class SxMail
     protected $view;
 
     /**
+     * @var Zend\View\Model\ViewModel
+     */
+    protected $layout;
+
+    /**
      * Construct SxMail.
      *
      * @param   array   $config
@@ -30,6 +35,55 @@ class SxMail
     {
         $this->view   = $view;
         $this->config = $config;
+
+        $this->setLayout();
+    }
+
+    /**
+     * Set the layout.
+     *
+     * @param   mixed   $layout Either null (looks in config), ViewModel, or string.
+     *
+     * @throws InvalidArgumentException
+     */
+    public function setLayout($layout = null)
+    {
+        if (null !== $layout && !is_string($layout) && !($layout instanceof ViewModel)) {
+            throw new InvalidArgumentException(
+                'Invalid value supplied for setLayout.'+
+                'Expected null, string, or Zend\View\Model\ViewModel.'
+            );
+        }
+
+        if (null === $layout && empty($this->config['message']['layout'])) {
+            return;
+        }
+
+        if (null === $layout) {
+            $layout = (string) $this->config['message']['layout'];
+
+            unset($this->config['message']['layout']);
+        }
+
+        if (is_string($layout)) {
+
+            $template   = $layout;
+            $layout     = new ViewModel;
+
+            $layout->setTemplate($template);
+        }
+
+        $this->layout = $layout;
+    }
+
+    /**
+     * Get the layout.
+     *
+     * @return  \Zend\View\Model\ViewModel  Returns null when there's no layout.
+     */
+    public function getLayout()
+    {
+        return $this->layout;
     }
 
     /**
@@ -48,14 +102,10 @@ class SxMail
             $body = '';
         }
 
-        if (!empty($this->config['message']['layout']) && is_string($this->config['message']['layout'])) {
-            $layout = new ViewModel;
-
-            $layout->setTemplate($this->config['message']['layout'])->setVariables(array(
+        if (null !== ($layout = $this->getLayout())) {
+            $layout->setVariables(array(
                 'content' => $body,
             ));
-
-            unset($this->config['message']['layout']);
 
             $body = $this->view->render($layout);
         }
