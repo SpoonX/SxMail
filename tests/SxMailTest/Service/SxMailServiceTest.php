@@ -19,13 +19,13 @@ class SxMailServiceTest extends PHPUnit_Framework_TestCase
             new ServiceManagerConfig(include __DIR__ . '/_files/services.config.php')
         );
 
-        $view        = $this->getMock('Zend\View\View', array('getView'));
-        $viewManager = $this->getMock('Zend\Mvc\View\Console\ViewManager', array('getView'));
+        $viewRenderer   = $this->getMock('Zend\View\Renderer\RendererInterface', array('render', 'getEngine', 'setResolver'));
+        $viewManager    = $this->getMock('Zend\Mvc\View\Console\ViewManager', array('getRenderer'));
 
         $viewManager
                 ->expects($this->once())
-                ->method('getView')
-                ->will($this->returnValue($view));
+                ->method('getRenderer')
+                ->will($this->returnValue($viewRenderer));
 
         $serviceManager->setService('view_manager', $viewManager);
         $serviceManager->setService('Config', include __DIR__ . '/_files/module.config.php');

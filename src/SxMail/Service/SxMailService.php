@@ -4,7 +4,7 @@ namespace SxMail\Service;
 
 use SxMail\SxMail;
 use Zend\Config\Config;
-use Zend\View\View;
+use Zend\View\Renderer\RendererInterface;
 
 class SxMailService
 {
@@ -16,23 +16,23 @@ class SxMailService
 
     /**
      *
-     * @var Zend\View\View
+     * @var \Zend\View\Renderer\RendererInterface
      */
-    protected $view;
+    protected $viewRenderer;
 
     /**
      * Construct the service.
      *
-     * @param   \Zend\View\View $view
-     * @param   array           $config
+     * @param   \Zend\View\Renderer\RendererInterface   $viewRenderer
+     * @param   array                                   $config
      */
-    public function __construct(View $view, array $config)
+    public function __construct(RendererInterface $viewRenderer, array $config)
     {
         if (empty($config['configs']['default'])) {
             $config['configs']['default'] = array();
         }
-        $this->view   = $view;
-        $this->config = new Config($config, true);
+        $this->viewRenderer = $viewRenderer;
+        $this->config       = new Config($config, true);
     }
 
     /**
@@ -62,6 +62,6 @@ class SxMailService
      */
     public function prepare($configKey = null)
     {
-        return new SxMail($this->view, $this->getConfig($configKey));
+        return new SxMail($this->viewRenderer, $this->getConfig($configKey));
     }
 }
