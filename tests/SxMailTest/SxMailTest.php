@@ -47,6 +47,42 @@ class SxMailTest extends PHPUnit_Framework_TestCase
     }
 
     /**
+     * Test if composing in the most default way works.
+     */
+    public function testSetHeaders()
+    {
+        $viewRenderer = $this->getMock('Zend\View\Renderer\RendererInterface', array('render', 'getEngine', 'setResolver'));
+        $viewRenderer
+                ->expects($this->exactly(0))
+                ->method('render')
+                ->will($this->returnValue('aapje'));
+
+        $viewManager = $this->getMock('Zend\Mvc\View\Console\ViewManager', array('getRenderer'));
+
+        $viewManager
+                ->expects($this->once())
+                ->method('getRenderer')
+                ->will($this->returnValue($viewRenderer));
+
+        $serviceManager = new ServiceManager(
+            new ServiceManagerConfig(include __DIR__ . '/_files/services.config.php')
+        );
+
+        $serviceManager->setService('view_manager', $viewManager);
+        $serviceManager->setService('Config', include __DIR__ . '/_files/module.config.php');
+
+        $viewModel  = new ViewModel;
+        $viewModel->setTemplate('mock.phtml');
+
+        $mail       = $serviceManager->get('SxMail\Service\SxMail');
+        $sxMail     = $mail->prepare('testSetHeaders');
+        $data       = $sxMail->compose('Random');
+        $headers    = $data->getHeaders();
+
+        $this->assertEquals('X-Cool-Header: cool value!', $headers->get('x-cool-header')->toString());
+    }
+
+    /**
      * Test if setLayout fails with invalid values.
      * @expectedException SxMail\Exception\InvalidArgumentException
      */

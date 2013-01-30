@@ -44,6 +44,14 @@ return array(
                     ),
                 ),
             ),
+            'testSetHeaders' => array(
+                'transport' => null,
+                'message' => array(
+                    'headers' => array(
+                        'x-cool-header' => 'cool value!',
+                    ),
+                ),
+            ),
             'testSmtp' => array(
                 'transport' => array(
                     'options'   => array(
