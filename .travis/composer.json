@@ -1,0 +1,6 @@
+{
+    "require": {
+        "rwoverdijk/sxmail": "*@dev"
+    }
+}
+
