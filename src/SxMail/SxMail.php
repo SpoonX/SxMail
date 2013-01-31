@@ -59,7 +59,7 @@ class SxMail
     {
         if (null !== $layout && !is_string($layout) && !($layout instanceof ViewModel)) {
             throw new InvalidArgumentException(
-                'Invalid value supplied for setLayout.'+
+                'Invalid value supplied for setLayout.'.
                 'Expected null, string, or Zend\View\Model\ViewModel.'
             );
         }
