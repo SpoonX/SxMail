@@ -1,4 +1,4 @@
-SxMail 1.2.0
+SxMail 1.2.1
 =======================
 [![Build Status](https://secure.travis-ci.org/RWOverdijk/SxMail.png?branch=master)](http://travis-ci.org/RWOverdijk/SxMail)
 
@@ -16,8 +16,18 @@ Installation
 #when asked for a version, type "1.*".
 ```
 
-Usage
+Features
 ----------
+* Easily configurable. Both messages and transport.
+* Use ViewModels
+* Layout support
+* Mimepart detection
+* Easy header configuration
+* Access to native classes
+* 100% code coverage
+* Scratches your back after a long day of work
+* Makes a good drinking buddy.
+
 For usage and configuration examples, please take a look at the wiki.
 The wiki can be found [here](https://github.com/RWOverdijk/SxMail/wiki).
 
