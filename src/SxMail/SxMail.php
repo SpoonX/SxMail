@@ -3,6 +3,7 @@
 namespace SxMail;
 
 use Zend\Mail\Message;
+use Zend\Mail\Transport\TransportInterface;
 use Zend\Mime\Message as MimeMessage;
 use Zend\Mime\Part as MimePart;
 use Zend\View\Model\ViewModel;
@@ -27,6 +28,11 @@ class SxMail
      * @var \Zend\View\Model\ViewModel
      */
     protected $layout;
+
+    /**
+     * @var \Zend\Mail\Transport\TransportInterface
+     */
+    protected $transport;
 
     /**
      * Construct SxMail.
@@ -202,12 +208,25 @@ class SxMail
     }
 
     /**
-     * Send out the email.
-     *
-     * @param   \Zend\Mail\Message  $message
+     * Set the transport instance.
+     * 
+     * @param \Zend\Mail\Transport\TransportInterface $transport
      */
-    public function send(Message $message)
+    public function setTransport(TransportInterface $transport)
     {
+        $this->transport = $transport;
+    }
+
+    /**
+     * @return  \Zend\Mail\Transport\TransportInterface
+     * @throws  RuntimeException
+     */
+    public function getTransport()
+    {
+        if (null !== $this->transport) {
+            return $this->transport;
+        }
+
         if (empty($this->config['transport'])) {
             $this->config['transport'] = array(
                 'type' => 'sendmail',
@@ -233,6 +252,18 @@ class SxMail
             }
         }
 
-        $transport->send($message);
+        $this->setTransport($transport);
+
+        return $this->transport;
+    }
+
+    /**
+     * Send out the email.
+     *
+     * @param   \Zend\Mail\Message  $message
+     */
+    public function send(Message $message)
+    {
+        $this->getTransport()->send($message);
     }
 }

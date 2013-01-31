@@ -258,6 +258,18 @@ class SxMailTest extends PHPUnit_Framework_TestCase
         $this->assertEquals($body, $data->getBody()->getPartContent(0));
 
         $sxMail->send($data);
+
+        // Make sure we can get the transport method.
+        $this->assertInstanceOf('Zend\Mail\Transport\TransportInterface', $sxMail->getTransport());
+
+        // Make sure we get same instance
+        $this->assertEquals($sxMail->getTransport(), $sxMail->getTransport());
+
+        // Test if setting a transport method works.
+        $smtp = new \Zend\Mail\Transport\Smtp;
+
+        $sxMail->setTransport($smtp);
+        $this->assertEquals($smtp, $sxMail->getTransport());
     }
 
     /**
