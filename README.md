@@ -1,4 +1,4 @@
-SxMail 1.3.2
+SxMail 1.3.3
 =======================
 [![Build Status](https://secure.travis-ci.org/RWOverdijk/SxMail.png?branch=master)](http://travis-ci.org/RWOverdijk/SxMail)
 
