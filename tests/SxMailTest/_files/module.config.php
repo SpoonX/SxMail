@@ -44,6 +44,11 @@ return array(
                     ),
                 ),
             ),
+            'testNoAlternativeBody' => array(
+                'message' => array(
+                    'generate_alternative_body' => false,
+                ),
+            ),
             'testSetHeaders' => array(
                 'transport' => null,
                 'message' => array(

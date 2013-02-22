@@ -392,4 +392,32 @@ class SxMailTest extends PHPUnit_Framework_TestCase
         $sxMail->send($data);
     }
 
+    /**
+     * Test if we ignore alternative bodies when configured to do so
+     */
+    public function testDontRenderAlternative()
+    {
+        $viewRenderer = $this->getMock('Zend\View\Renderer\RendererInterface', array('render', 'getEngine', 'setResolver'));
+        $viewManager  = $this->getMock('Zend\Mvc\View\Console\ViewManager', array('getRenderer'));
+
+        $viewManager
+            ->expects($this->once())
+            ->method('getRenderer')
+            ->will($this->returnValue($viewRenderer));
+
+        $serviceManager = new ServiceManager(
+            new ServiceManagerConfig(include __DIR__ . '/_files/services.config.php')
+        );
+
+        $serviceManager->setService('view_manager', $viewManager);
+        $serviceManager->setService('Config', include __DIR__ . '/_files/module.config.php');
+
+        $body   = '<this>will match</this>';
+        $mail   = $serviceManager->get('SxMail\Service\SxMail');
+        $sxMail = $mail->prepare('testNoAlternativeBody');
+        $data   = $sxMail->compose($body);
+
+        $this->assertEquals($body, $data->getBody()->getPartContent(0));
+    }
+
 }
