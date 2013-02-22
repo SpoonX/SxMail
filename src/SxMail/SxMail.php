@@ -139,7 +139,7 @@ class SxMail
         }
 
         if ($this->config['message']['generate_alternative_body'] && $mimeType === 'text/html') {
-            $generatedBody  = $this->renderAlternativeBody($body);
+            $generatedBody  = $this->renderTextBody($body);
             $altPart        = new MimePart($generatedBody);
             $altPart->type  = 'text/plain';
 
@@ -158,7 +158,7 @@ class SxMail
      *
      * @return  string
      */
-    protected function renderAlternativeBody($body)
+    protected function renderTextBody($body)
     {
         $body = html_entity_decode(
             trim(strip_tags(preg_replace('/<(head|title|style|script)[^>]*>.*?<\/\\1>/s', '', $body))), ENT_QUOTES
