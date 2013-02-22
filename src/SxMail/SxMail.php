@@ -134,9 +134,41 @@ class SxMail
         $mimePart->type = $mimeType;
         $message        = new MimeMessage();
 
+        if (!isset($this->config['message']['generate_alternative_body'])) {
+            $this->config['message']['generate_alternative_body'] = true;
+        }
+
+        if ($this->config['message']['generate_alternative_body'] && $mimeType === 'text/html') {
+            $generatedBody  = $this->renderTextBody($body);
+            $altPart        = new MimePart($generatedBody);
+            $altPart->type  = 'text/plain';
+
+            $message->addPart($altPart);
+        }
+
         $message->addPart($mimePart);
 
         return $message;
+    }
+
+    /**
+     * Strip html tags and render a text-only version.
+     *
+     * @param   string  $body
+     *
+     * @return  string
+     */
+    protected function renderTextBody($body)
+    {
+        $body = html_entity_decode(
+            trim(strip_tags(preg_replace('/<(head|title|style|script)[^>]*>.*?<\/\\1>/s', '', $body))), ENT_QUOTES
+        );
+
+        if (empty($body)) {
+          $body = 'To view this email, open it an email client that supports HTML.';
+        }
+
+        return $body;
     }
 
     /**
@@ -201,6 +233,10 @@ class SxMail
 
         $message->setBody($body);
 
+        if ($this->config['message']['generate_alternative_body'] && count($body->getParts()) > 1) {
+            $message->getHeaders()->get('content-type')->setType('multipart/alternative');
+        }
+
         $this->applyMessageHeaders($message);
         $this->applyMessageOptions($message);
 
@@ -209,7 +245,7 @@ class SxMail
 
     /**
      * Set the transport instance.
-     * 
+     *
      * @param \Zend\Mail\Transport\TransportInterface $transport
      */
     public function setTransport(TransportInterface $transport)
