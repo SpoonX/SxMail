@@ -1,10 +1,9 @@
-SxMail 1.3.3
+SxMail 1.3.4
 =======================
-[![Build Status](https://secure.travis-ci.org/RWOverdijk/SxMail.png?branch=master)](http://travis-ci.org/RWOverdijk/SxMail)
+[![Build Status](https://secure.travis-ci.org/SpoonX/SxMail.png?branch=master)](http://travis-ci.org/SpoonX/SxMail)
 
-### BC-Break!
-This version by-default adds an alternative body when using the `SxMail::compose()` method.
-Please take a look at the [wiki](https://github.com/RWOverdijk/SxMail/wiki/Configuration-options#wiki-generate_alternative_body) to see how you can disable this.
+## Warning!
+Please rename your package to `spoonx/sxmail`. It has been moved there.
 
 Introduction
 ------------
@@ -16,7 +15,7 @@ After setting up minimal configuration, you can start sending out e-mails.
 Installation
 ------------
 ```
-./composer.phar require rwoverdijk/sxmail
+./composer.phar require spoonx/sxmail
 #when asked for a version, type "1.*".
 ```
 
@@ -34,12 +33,12 @@ Features
 * Makes a good drinking buddy.
 
 For usage and configuration examples, please take a look at the wiki.
-The wiki can be found [here](https://github.com/RWOverdijk/SxMail/wiki).
+The wiki can be found [here](https://github.com/SpoonX/SxMail/wiki).
 
 Questions / support
 ------------
 If you're having trouble with this module there are a couple of resources that might be of help.
-* [The wiki](https://github.com/RWOverdijk/SxMail/wiki).
+* [The wiki](https://github.com/SpoonX/SxMail/wiki).
 * [RWOverdijk at irc.freenode.net #zftalk.dev](http://webchat.freenode.net?channels=zftalk.dev%2Czftalk&uio=MTE9MTAz8d).
-* [Issue tracker](https://github.com/RWOverdijk/SxMail/issues). (Please try to not submit unrelated issues).
+* [Issue tracker](https://github.com/SpoonX/SxMail/issues). (Please try to not submit unrelated issues).
 * By [mail](mailto:r.w.overdijk@gmail.com?Subject=SxMail%20help)

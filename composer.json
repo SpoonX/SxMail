@@ -1,5 +1,5 @@
 {
-    "name": "rwoverdijk/sxmail",
+    "name": "spoonx/sxmail",
     "description": "A simple mail module for Zend Framework 2.",
     "license": "BSD-2-Clause",
     "type": "library",
@@ -20,6 +20,9 @@
     "require": {
         "php": ">=5.3.3",
         "zendframework/zendframework": "2.*"
+    },
+    "replace": {
+        "rwoverdijk/sxmail": "*"
     },
     "autoload": {
         "psr-0": {
