@@ -145,7 +145,9 @@ class SxMail
             $generatedBody  = $this->renderTextBody($body);
             $altPart        = new MimePart($generatedBody);
             $altPart->type  = 'text/plain';
-
+            if (isset($this->config['charset'])) {
+                $altPart->charset = $this->config['charset'];
+            }
             $message->addPart($altPart);
         }
 
