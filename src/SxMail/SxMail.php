@@ -132,6 +132,9 @@ class SxMail
 
         $mimePart       = new MimePart($body);
         $mimePart->type = $mimeType;
+        if (isset($this->config['encoding'])) {
+            $mimePart->encoding = $this->config['encoding'];
+        }
         $message        = new MimeMessage();
 
         if (!isset($this->config['message']['generate_alternative_body'])) {
