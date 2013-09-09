@@ -122,13 +122,13 @@ class SxMailTest extends PHPUnit_Framework_TestCase
         $mimeModelTxt   = $htmlModel->getBody()->getPartHeadersArray(0);
         $mimeModel      = $htmlModel->getBody()->getPartHeadersArray(1);
 
-        $this->assertEquals('text/plain', $mimeString[0][1]);
-        $this->assertEquals('text/plain', $mimeTextForced[0][1]);
-        $this->assertEquals('text/html', $mimeHtmlForced[0][1]);
-        $this->assertEquals('text/plain', $mimeText[0][1]);
-        $this->assertEquals('text/html', $mimeHtml[0][1]);
-        $this->assertEquals('text/html', $mimeModel[0][1]);
-        $this->assertEquals('text/plain', $mimeModelTxt[0][1]);
+        $this->assertEquals('text/plain; charset=UTF-8', $mimeString[0][1]);
+        $this->assertEquals('text/plain; charset=UTF-8', $mimeTextForced[0][1]);
+        $this->assertEquals('text/html; charset=UTF-8', $mimeHtmlForced[0][1]);
+        $this->assertEquals('text/plain; charset=UTF-8', $mimeText[0][1]);
+        $this->assertEquals('text/html; charset=UTF-8', $mimeHtml[0][1]);
+        $this->assertEquals('text/html; charset=UTF-8', $mimeModel[0][1]);
+        $this->assertEquals('text/plain; charset=UTF-8', $mimeModelTxt[0][1]);
     }
 
     /**
@@ -424,10 +424,8 @@ class SxMailTest extends PHPUnit_Framework_TestCase
             ->method('getRenderer')
             ->will($this->returnValue($viewRenderer));
 
-        $serviceConfig = include __DIR__ . '/_files/services.config.php';
-        $serviceConfig['sxmail']['configs']['default']['charset'] = 'UTF-8';
         $serviceManager = new ServiceManager(
-            new ServiceManagerConfig($serviceConfig)
+            new ServiceManagerConfig(include __DIR__ . '/_files/services.config.php')
         );
 
         $serviceManager->setService('view_manager', $viewManager);
@@ -441,6 +439,5 @@ class SxMailTest extends PHPUnit_Framework_TestCase
         $parts = $data->getBody()->getParts();
 
         $this->assertEquals($parts[0]->charset, 'UTF-8');
-        $this->assertEquals($parts[1]->charset, 'UTF-8');
     }
 }
