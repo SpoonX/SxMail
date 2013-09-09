@@ -436,7 +436,7 @@ class SxMailTest extends PHPUnit_Framework_TestCase
         $sxMail = $mail->prepare('testSimpleSendMail');
         $data   = $sxMail->compose($body);
 
-        $parts = $mail->getBody()->getParts();
+        $parts = $data->getBody()->getParts();
 
         $this->assertEquals($parts[0]->charset, 'UTF-8');
         $this->assertEquals($parts[1]->charset, 'UTF-8');
