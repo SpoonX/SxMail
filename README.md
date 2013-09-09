@@ -1,4 +1,4 @@
-SxMail 1.3.4
+SxMail
 =======================
 [![Build Status](https://secure.travis-ci.org/SpoonX/SxMail.png?branch=master)](http://travis-ci.org/SpoonX/SxMail)
 
