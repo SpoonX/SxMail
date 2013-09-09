@@ -4,6 +4,7 @@ return array(
     'sxmail' => array(
         'configs' => array(
             'default' => array(
+                'charset' => 'UTF-8',
                 'transport' => array(
                     'type'      => 'smtp',
                     'foo'       => 'bar',

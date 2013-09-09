@@ -132,6 +132,11 @@ class SxMail
 
         $mimePart       = new MimePart($body);
         $mimePart->type = $mimeType;
+
+        if (!empty($this->config['charset'])) {
+            $mimePart->charset = $this->config['charset'];
+        }
+
         $message        = new MimeMessage();
 
         if (!isset($this->config['message']['generate_alternative_body'])) {
@@ -142,6 +147,10 @@ class SxMail
             $generatedBody  = $this->renderTextBody($body);
             $altPart        = new MimePart($generatedBody);
             $altPart->type  = 'text/plain';
+
+            if (!empty($this->config['charset'])) {
+                $altPart->charset = $this->config['charset'];
+            }
 
             $message->addPart($altPart);
         }

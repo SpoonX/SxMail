@@ -122,13 +122,13 @@ class SxMailTest extends PHPUnit_Framework_TestCase
         $mimeModelTxt   = $htmlModel->getBody()->getPartHeadersArray(0);
         $mimeModel      = $htmlModel->getBody()->getPartHeadersArray(1);
 
-        $this->assertEquals('text/plain', $mimeString[0][1]);
-        $this->assertEquals('text/plain', $mimeTextForced[0][1]);
-        $this->assertEquals('text/html', $mimeHtmlForced[0][1]);
-        $this->assertEquals('text/plain', $mimeText[0][1]);
-        $this->assertEquals('text/html', $mimeHtml[0][1]);
-        $this->assertEquals('text/html', $mimeModel[0][1]);
-        $this->assertEquals('text/plain', $mimeModelTxt[0][1]);
+        $this->assertEquals('text/plain; charset=UTF-8', $mimeString[0][1]);
+        $this->assertEquals('text/plain; charset=UTF-8', $mimeTextForced[0][1]);
+        $this->assertEquals('text/html; charset=UTF-8', $mimeHtmlForced[0][1]);
+        $this->assertEquals('text/plain; charset=UTF-8', $mimeText[0][1]);
+        $this->assertEquals('text/html; charset=UTF-8', $mimeHtml[0][1]);
+        $this->assertEquals('text/html; charset=UTF-8', $mimeModel[0][1]);
+        $this->assertEquals('text/plain; charset=UTF-8', $mimeModelTxt[0][1]);
     }
 
     /**
@@ -414,4 +414,30 @@ class SxMailTest extends PHPUnit_Framework_TestCase
         $this->assertEquals($body, $data->getBody()->getPartContent(0));
     }
 
+    public function testCharset()
+    {
+        $viewRenderer = $this->getMock('Zend\View\Renderer\RendererInterface', array('render', 'getEngine', 'setResolver'));
+        $viewManager  = $this->getMock('Zend\Mvc\View\Console\ViewManager', array('getRenderer'));
+
+        $viewManager
+            ->expects($this->once())
+            ->method('getRenderer')
+            ->will($this->returnValue($viewRenderer));
+
+        $serviceManager = new ServiceManager(
+            new ServiceManagerConfig(include __DIR__ . '/_files/services.config.php')
+        );
+
+        $serviceManager->setService('view_manager', $viewManager);
+        $serviceManager->setService('Config', include __DIR__ . '/_files/module.config.php');
+
+        $body   = 'foo bar';
+        $mail   = $serviceManager->get('SxMail\Service\SxMail');
+        $sxMail = $mail->prepare('testSimpleSendMail');
+        $data   = $sxMail->compose($body);
+
+        $parts = $data->getBody()->getParts();
+
+        $this->assertEquals($parts[0]->charset, 'UTF-8');
+    }
 }
