@@ -414,4 +414,31 @@ class SxMailTest extends PHPUnit_Framework_TestCase
         $this->assertEquals($body, $data->getBody()->getPartContent(0));
     }
 
+    public function testCharset()
+    {
+        $viewRenderer = $this->getMock('Zend\View\Renderer\RendererInterface', array('render', 'getEngine', 'setResolver'));
+        $viewManager  = $this->getMock('Zend\Mvc\View\Console\ViewManager', array('getRenderer'));
+
+        $viewManager
+            ->expects($this->once())
+            ->method('getRenderer')
+            ->will($this->returnValue($viewRenderer));
+
+        $serviceManager = new ServiceManager(
+            new ServiceManagerConfig(include __DIR__ . '/_files/services.config.php')
+        );
+
+        $serviceManager->setService('view_manager', $viewManager);
+        $serviceManager->setService('Config', include __DIR__ . '/_files/module.config.php');
+
+        $body   = 'foo bar';
+        $mail   = $serviceManager->get('SxMail\Service\SxMail');
+        $sxMail = $mail->prepare('testSimpleSendMail');
+        $data   = $sxMail->compose($body);
+
+        $parts = $mail->getBody()->getParts();
+
+        $this->assertEquals($parts[0]->charset, 'UTF-8');
+        $this->assertEquals($parts[1]->charset, 'UTF-8');
+    }
 }
