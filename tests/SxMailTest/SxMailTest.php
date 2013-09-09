@@ -424,8 +424,10 @@ class SxMailTest extends PHPUnit_Framework_TestCase
             ->method('getRenderer')
             ->will($this->returnValue($viewRenderer));
 
+        $serviceConfig = include __DIR__ . '/_files/services.config.php';
+        $serviceConfig['sxmail']['configs']['default']['charset'] = 'UTF-8';
         $serviceManager = new ServiceManager(
-            new ServiceManagerConfig(include __DIR__ . '/_files/services.config.php')
+            new ServiceManagerConfig($serviceConfig)
         );
 
         $serviceManager->setService('view_manager', $viewManager);
