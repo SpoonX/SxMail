@@ -239,6 +239,10 @@ class SxMail
 
         $body    = $this->manipulateBody($body, $mimeType);
         $message = new Message;
+        
+        if (!empty($this->config['charset'])) {
+            $message->setEncoding($this->config['charset']);
+        }
 
         $message->setBody($body);
 
