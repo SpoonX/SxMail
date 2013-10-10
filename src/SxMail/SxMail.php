@@ -195,7 +195,10 @@ class SxMail
             $method = 'set'.ucfirst($key);
 
             if (is_callable(array($message, $method))) {
-                $message->$method((string) $value);
+                if (!is_array($value)) {
+                    $value = array($value);
+                }
+                call_user_func_array(array($message, $method), $value);
             }
         }
 
