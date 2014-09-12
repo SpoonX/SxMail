@@ -306,6 +306,20 @@ class SxMail
     }
     
     /**
+     * Set variable storage
+     *
+     * Expects either an array, or an object implementing ArrayAccess.
+     *
+     * @param  array|ArrayAccess $variables
+     * @return PhpRenderer
+     * @throws Exception\InvalidArgumentException
+     */
+    public function setVars($variables)
+    {
+        return $this->viewRenderer->setVars($variables);
+    }
+    
+    /**
      * Get a single variable, or all variables
      *
      * @param  mixed $key
