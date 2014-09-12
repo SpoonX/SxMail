@@ -304,6 +304,28 @@ class SxMail
 
         return $this->transport;
     }
+    
+    /**
+     * Get a single variable, or all variables
+     *
+     * @param  mixed $key
+     * @return mixed
+     */
+    public function vars($key = null)
+    {
+        return $this->viewRenderer->vars($key);
+    }
+
+    /**
+     * Get a single variable
+     *
+     * @param  mixed $key
+     * @return mixed
+     */
+    public function get($key)
+    {
+        return $this->viewRenderer->get($key);
+    }
 
     /**
      * Send out the email.
