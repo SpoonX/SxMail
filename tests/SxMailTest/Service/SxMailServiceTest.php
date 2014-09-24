@@ -1,6 +1,6 @@
 <?php
 
-namespace SxMailTest;
+namespace SxMailTest\Service;
 
 use PHPUnit_Framework_TestCase;
 use Zend\ServiceManager\ServiceManager;
