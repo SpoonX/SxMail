@@ -4,7 +4,7 @@ namespace SxMail;
 
 return array(
     'factories' => array(
-        'SxMail\Service\SxMail' => function($sm) {
+        'SxMail\Service\SxMail' => function ($sm) {
             $config         = $sm->get('config');
             $sxmailConfig   = !empty($config['sxmail']) ? $config['sxmail'] : array();
 
