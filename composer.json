@@ -19,7 +19,9 @@
     ],
     "require": {
         "php": ">=5.3.3",
-        "zendframework/zendframework": "2.*"
+        "zendframework/zend-view": "2.*",
+        "zendframework/zend-modulemanager": "2.*",
+        "zendframework/zend-config": "2.*",
     },
     "replace": {
         "rwoverdijk/sxmail": "*"
