@@ -1,8 +1,8 @@
 language: php
 
 php:
-  - 5.3
-  - 5.4
+  - 5.5
+  - 5.6
 
 before_script:
   - cd ..
@@ -12,6 +12,7 @@ before_script:
   - curl -s http://getcomposer.org/installer | php
   - php composer.phar install --dev
   - rm -rf vendor/rwoverdijk/sxmail
+  - mkdir -p vendor/rwoverdijk/
   - cp -r ../SxMail vendor/rwoverdijk/sxmail
   - cd vendor/rwoverdijk/sxmail
   - wget http://cs.sensiolabs.org/get/php-cs-fixer.phar
