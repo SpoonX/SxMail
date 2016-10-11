@@ -304,6 +304,42 @@ class SxMail
 
         return $this->transport;
     }
+    
+    /**
+     * Set variable storage
+     *
+     * Expects either an array, or an object implementing ArrayAccess.
+     *
+     * @param  array|ArrayAccess $variables
+     * @return PhpRenderer
+     * @throws Exception\InvalidArgumentException
+     */
+    public function setVars($variables)
+    {
+        return $this->viewRenderer->setVars($variables);
+    }
+    
+    /**
+     * Get a single variable, or all variables
+     *
+     * @param  mixed $key
+     * @return mixed
+     */
+    public function vars($key = null)
+    {
+        return $this->viewRenderer->vars($key);
+    }
+
+    /**
+     * Get a single variable
+     *
+     * @param  mixed $key
+     * @return mixed
+     */
+    public function get($key)
+    {
+        return $this->viewRenderer->get($key);
+    }
 
     /**
      * Send out the email.
